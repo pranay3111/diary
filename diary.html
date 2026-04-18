@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pranay's Divine Diary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --crimson: #6B1A2A;
+    --crimson-dark: #4A0F1C;
+    --gold: #C9921A;
+    --gold-light: #FBF0D8;
+    --lotus: #C2456E;
+    --cream: #FDFAF4;
+    --deep: #2C1A0E;
+    --muted: #7A5C3A;
+    --border: rgba(201,146,26,0.22);
+    --shadow: 0 2px 12px rgba(107,26,42,0.07);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    font-family: 'Lato', sans-serif;
+    background: #F4EFE6;
+    color: #2C1A0E;
+    overflow: hidden;
+  }
+
+  #app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #4A0F1C 0%, #7A3D0A 55%, #4A0F1C 100%);
+    padding: 10px 18px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+    box-shadow: 0 2px 16px rgba(74,15,28,0.35);
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .vedic-symbol {
+    width: 38px; height: 38px;
+    flex-shrink: 0;
+  }
+  .header-title { font-family: 'Cinzel', serif; font-size: 16px; color: #FFE0A0; font-weight: 500; letter-spacing: 0.8px; }
+  .header-sub { font-size: 10px; color: rgba(255,224,160,0.55); margin-top: 1px; letter-spacing: 0.4px; }
+  .year-switcher { display: flex; gap: 5px; }
+  .year-btn {
+    font-family: 'Cinzel', serif; font-size: 12px;
+    background: rgba(255,224,160,0.1); color: rgba(255,224,160,0.65);
+    border: 1px solid rgba(255,224,160,0.18); border-radius: 5px;
+    padding: 5px 13px; cursor: pointer; transition: all 0.18s;
+  }
+  .year-btn.active { background: rgba(255,224,160,0.22); color: #FFE8B0; border-color: rgba(255,224,160,0.4); }
+  .year-btn:hover { background: rgba(255,224,160,0.18); }
+
+  /* NAV */
+  nav {
+    background: #fff;
+    border-bottom: 1px solid rgba(201,146,26,0.13);
+    display: flex;
+    flex-shrink: 0;
+  }
+  .nav-tab {
+    flex: 1; padding: 10px 6px; text-align: center;
+    font-size: 12px; cursor: pointer;
+    color: #7A5C3A; border-bottom: 3px solid transparent;
+    transition: all 0.18s; display: flex; align-items: center; justify-content: center; gap: 5px;
+  }
+  .nav-tab.active { color: #6B1A2A; border-bottom-color: #C9921A; font-weight: 700; }
+  .nav-tab:hover:not(.active) { color: #2C1A0E; background: #FFF8F0; }
+  .tab-icon { font-size: 14px; }
+
+  /* STATUS BAR */
+  .status-bar {
+    background: rgba(107,26,42,0.05); border-bottom: 1px solid rgba(201,146,26,0.1);
+    padding: 5px 16px; font-size: 11px; color: #7A5C3A;
+    display: flex; align-items: center; gap: 7px;
+    flex-shrink: 0;
+  }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #C9B89A; flex-shrink: 0; }
+  .status-dot.connected { background: #3B6D11; }
+  .status-dot.error { background: #A32D2D; }
+  .settings-link { font-size: 11px; color: #C9921A; cursor: pointer; text-decoration: underline; margin-left: auto; }
+
+  /* CONTENT */
+  #content { flex: 1; overflow: hidden; position: relative; }
+
+  .panel {
+    display: none;
+    height: 100%;
+    overflow-y: auto;
+    padding: 14px;
+    flex-direction: column;
+  }
+  .panel.active { display: flex; }
+
+  /* CALENDAR — side by side, no scroll */
+  #panel-calendar {
+    flex-direction: row !important;
+    gap: 12px;
+    overflow: hidden !important;
+    padding: 12px;
+  }
+
+  .cal-col { display: flex; flex-direction: column; }
+  .cal-col-left { flex: 0 0 270px; }
+  .cal-col-right { flex: 1; min-width: 0; }
+
+  @media (max-width: 580px) {
+    #panel-calendar { flex-direction: column !important; overflow-y: auto !important; }
+    .cal-col-left { flex: none; }
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 11px;
+    border: 1px solid rgba(201,146,26,0.13);
+    box-shadow: var(--shadow);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .card-head {
+    padding: 10px 14px 9px;
+    border-bottom: 1px solid rgba(201,146,26,0.1);
+    flex-shrink: 0;
+  }
+  .card-title { font-family: 'Cinzel', serif; font-size: 11px; color: #6B1A2A; letter-spacing: 0.4px; }
+  .card-body { padding: 11px 13px; flex: 1; display: flex; flex-direction: column; min-height: 0; }
+
+  /* COMPACT CALENDAR GRID */
+  .cal-nav-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; }
+  .cal-nav-btn {
+    background: none; border: 1px solid rgba(201,146,26,0.22); border-radius: 5px;
+    padding: 3px 10px; cursor: pointer; color: #7A5C3A; font-size: 12px;
+    font-family: 'Lato', sans-serif; transition: all 0.13s;
+  }
+  .cal-nav-btn:hover { background: #FFF3E0; color: #6B1A2A; }
+  .cal-month-label { font-family: 'Cinzel', serif; font-size: 12px; color: #2C1A0E; }
+
+  .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; }
+  .dow { text-align: center; font-size: 9px; color: #7A5C3A; padding: 3px 0; font-weight: 700; letter-spacing: 0.3px; }
+  .day {
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    font-size: 11px; cursor: pointer; border-radius: 5px;
+    color: #2C1A0E; transition: all 0.1s; position: relative;
+  }
+  .day:hover { background: #FFF3E0; color: #6B1A2A; }
+  .day.today { background: #6B1A2A; color: #FFE0A0; font-weight: 700; }
+  .day.selected { background: #C9921A; color: #fff; font-weight: 700; }
+  .day.has-entry::after {
+    content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
+    width: 3px; height: 3px; border-radius: 50%; background: #C2456E;
+  }
+  .day.today.has-entry::after, .day.selected.has-entry::after { background: rgba(255,255,255,0.65); }
+  .day.other-month { color: #C9B89A; opacity: 0.4; }
+  .day.empty { cursor: default; pointer-events: none; }
+
+  /* ENTRY */
+  .entry-prompt { font-size: 12px; color: #C9B89A; font-style: italic; text-align: center; margin: auto; }
+  textarea {
+    width: 100%; border: 1px solid rgba(201,146,26,0.22); border-radius: 7px;
+    padding: 10px; font-size: 12px; font-family: 'Lato', sans-serif;
+    color: #2C1A0E; background: #FDFAF4; resize: none; outline: none;
+    line-height: 1.7; flex: 1; transition: border 0.13s; min-height: 0;
+  }
+  textarea:focus { border-color: #C9921A; }
+  .entry-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; flex-shrink: 0; }
+  .save-btn {
+    background: #6B1A2A; color: #FFE0A0; border: none; border-radius: 7px;
+    padding: 7px 16px; font-size: 12px; font-family: 'Lato', sans-serif;
+    cursor: pointer; font-weight: 700; transition: background 0.13s;
+  }
+  .save-btn:hover { background: #8B2A3A; }
+  .save-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .status-msg { font-size: 11px; color: #3B6D11; opacity: 0; transition: opacity 0.3s; }
+  .status-msg.show { opacity: 1; }
+
+  .shloka { font-size: 10px; color: #7A5C3A; font-style: italic; text-align: center; padding: 8px 0 0; opacity: 0.75; line-height: 1.6; flex-shrink: 0; }
+
+  /* TODOS */
+  .section-head { display: flex; align-items: center; gap: 8px; margin-bottom: 11px; flex-shrink: 0; }
+  .section-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .section-title { font-family: 'Cinzel', serif; font-size: 13px; color: #2C1A0E; }
+  .section-count { font-size: 11px; color: #7A5C3A; margin-left: auto; }
+
+  .add-row { display: flex; gap: 7px; margin-bottom: 11px; flex-shrink: 0; }
+  input[type="text"] {
+    flex: 1; border: 1px solid rgba(201,146,26,0.22); border-radius: 7px;
+    padding: 8px 11px; font-size: 12px; font-family: 'Lato', sans-serif;
+    color: #2C1A0E; background: #FDFAF4; outline: none; transition: border 0.13s;
+  }
+  input[type="text"]:focus { border-color: #C9921A; }
+  select {
+    border: 1px solid rgba(201,146,26,0.22); border-radius: 7px;
+    padding: 8px 7px; font-size: 11px; font-family: 'Lato', sans-serif;
+    color: #2C1A0E; background: #FDFAF4; outline: none; cursor: pointer;
+  }
+  .add-btn {
+    background: none; border: 1px solid rgba(201,146,26,0.32); border-radius: 7px;
+    padding: 8px 13px; font-size: 12px; cursor: pointer; color: #6B1A2A;
+    font-family: 'Lato', sans-serif; font-weight: 700; transition: all 0.13s; white-space: nowrap;
+  }
+  .add-btn:hover { background: #FFF3E0; }
+
+  .todo-list { list-style: none; display: flex; flex-direction: column; gap: 6px; overflow-y: auto; flex: 1; padding-right: 2px; }
+  .todo-item {
+    display: flex; align-items: flex-start; gap: 9px; padding: 8px 11px;
+    background: #FDFAF4; border-radius: 7px; border: 1px solid rgba(201,146,26,0.1); flex-shrink: 0;
+  }
+  .todo-item:hover { border-color: rgba(201,146,26,0.22); }
+  .check-box {
+    width: 15px; height: 15px; border-radius: 4px; border: 1.5px solid rgba(201,146,26,0.45);
+    cursor: pointer; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center;
+    justify-content: center; transition: all 0.1s; background: transparent; user-select: none; font-size: 10px;
+  }
+  .check-box.done { background: #C9921A; border-color: #C9921A; color: white; }
+  .todo-text { flex: 1; font-size: 12px; color: #2C1A0E; line-height: 1.5; word-break: break-word; }
+  .todo-text.done { text-decoration: line-through; color: #C9B89A; }
+  .pri-badge { font-size: 9px; padding: 2px 6px; border-radius: 4px; flex-shrink: 0; font-weight: 700; }
+  .pri-high { background: #FCEBEB; color: #791F1F; }
+  .pri-med { background: #FAEEDA; color: #633806; }
+  .pri-low { background: #EAF3DE; color: #27500A; }
+  .del-btn { background: none; border: none; color: #C9B89A; cursor: pointer; font-size: 13px; padding: 0 2px; flex-shrink: 0; font-family: 'Lato', sans-serif; transition: color 0.1s; }
+  .del-btn:hover { color: #A32D2D; }
+
+  /* NOTES */
+  .notes-scroll { flex: 1; overflow-y: auto; margin-bottom: 12px; }
+  .notes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px,1fr)); gap: 10px; }
+  .note-card { background: #fff; border-radius: 9px; border: 1px solid rgba(201,146,26,0.13); padding: 11px; position: relative; box-shadow: var(--shadow); }
+  .note-card-title { font-family: 'Cinzel', serif; font-size: 11px; color: #6B1A2A; margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid rgba(201,146,26,0.13); padding-right: 18px; }
+  .note-card-body { font-size: 12px; color: #7A5C3A; line-height: 1.6; white-space: pre-wrap; }
+  .note-del { position: absolute; top: 8px; right: 8px; background: none; border: none; color: #C9B89A; cursor: pointer; font-size: 12px; font-family: 'Lato', sans-serif; }
+  .note-del:hover { color: #A32D2D; }
+  .new-note-card { background: #fff; border-radius: 11px; border: 1px solid rgba(201,146,26,0.13); box-shadow: var(--shadow); padding: 13px; flex-shrink: 0; }
+  .new-note-label { font-family: 'Cinzel', serif; font-size: 11px; color: #6B1A2A; margin-bottom: 9px; }
+  .add-note-btn { background: #6B1A2A; color: #FFE0A0; border: none; border-radius: 7px; padding: 7px 16px; font-size: 12px; font-family: 'Lato', sans-serif; cursor: pointer; font-weight: 700; margin-top: 7px; transition: background 0.13s; }
+  .add-note-btn:hover { background: #8B2A3A; }
+
+  .empty-state { text-align: center; color: #C9B89A; font-size: 12px; padding: 18px; font-style: italic; }
+
+  /* MODAL */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(44,26,14,0.55); z-index: 999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .modal { background: #fff; border-radius: 14px; max-width: 440px; width: 100%; padding: 24px; box-shadow: 0 20px 50px rgba(44,26,14,0.28); }
+  .modal-title { font-family: 'Cinzel', serif; font-size: 15px; color: #6B1A2A; margin-bottom: 6px; }
+  .modal-sub { font-size: 12px; color: #7A5C3A; margin-bottom: 14px; line-height: 1.6; }
+  .modal-label { font-size: 11px; font-weight: 700; color: #2C1A0E; margin-bottom: 5px; }
+  .modal input { width: 100%; border: 1px solid rgba(201,146,26,0.28); border-radius: 7px; padding: 9px 11px; font-size: 12px; font-family: 'Lato', sans-serif; color: #2C1A0E; background: #FDFAF4; outline: none; }
+  .modal input:focus { border-color: #C9921A; }
+  .modal-save { background: #6B1A2A; color: #FFE0A0; border: none; border-radius: 7px; padding: 9px 20px; font-size: 12px; font-family: 'Lato', sans-serif; cursor: pointer; font-weight: 700; width: 100%; margin-top: 14px; transition: background 0.13s; }
+  .modal-save:hover { background: #8B2A3A; }
+  .modal-hint { font-size: 10px; color: #C9B89A; margin-top: 8px; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<!-- SETUP MODAL -->
+<div class="modal-overlay" id="setup-modal">
+  <div class="modal">
+    <div class="modal-title">&#x1F549; First-Time Setup</div>
+    <div class="modal-sub">Connect your Google Sheet to save and sync your diary across all devices.</div>
+    <div class="modal-label">Google Apps Script Web App URL</div>
+    <input type="text" id="script-url-input" placeholder="https://script.google.com/macros/s/YOUR_ID/exec" />
+    <div class="modal-hint">Saved only in your browser. Your data goes directly to your own Google Sheet.</div>
+    <button class="modal-save" onclick="saveConfig()">Save &amp; Connect</button>
+  </div>
+</div>
+
+<div id="app">
+  <header>
+    <div class="header-left">
+      <!-- Ancient Vedic Om — SVG drawn in classical style -->
+      <svg class="vedic-symbol" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <text x="4" y="30" font-size="28" font-family="serif" fill="#FFD07A" opacity="0.95">𑀅</text>
+      </svg>
+      <div>
+        <div class="header-title">Pranay's Divine Diary</div>
+        <div class="header-sub">Saraswati Namastubhyam &middot; 2026 &ndash; 2027</div>
+      </div>
+    </div>
+    <div class="year-switcher">
+      <button class="year-btn active" onclick="setYear(2026)" id="ytab-2026">2026</button>
+      <button class="year-btn" onclick="setYear(2027)" id="ytab-2027">2027</button>
+    </div>
+  </header>
+
+  <nav>
+    <div class="nav-tab active" onclick="switchTab('calendar')" id="tab-calendar"><span class="tab-icon">📅</span> Diary</div>
+    <div class="nav-tab" onclick="switchTab('home')" id="tab-home"><span class="tab-icon">🏠</span> Home</div>
+    <div class="nav-tab" onclick="switchTab('work')" id="tab-work"><span class="tab-icon">💼</span> Work</div>
+    <div class="nav-tab" onclick="switchTab('notes')" id="tab-notes"><span class="tab-icon">📝</span> Notes</div>
+  </nav>
+
+  <div class="status-bar">
+    <div class="status-dot" id="status-dot"></div>
+    <span id="status-text">Connecting...</span>
+    <span class="settings-link" onclick="openSettings()">&#9881; Settings</span>
+  </div>
+
+  <div id="content">
+
+    <!-- DIARY TAB -->
+    <div class="panel" id="panel-calendar">
+      <div class="cal-col cal-col-left">
+        <div class="card">
+          <div class="card-head">
+            <div class="cal-nav-row">
+              <button class="cal-nav-btn" onclick="prevMonth()">&#8249;</button>
+              <div class="cal-month-label" id="cal-month-label"></div>
+              <button class="cal-nav-btn" onclick="nextMonth()">&#8250;</button>
+            </div>
+          </div>
+          <div class="card-body" style="padding:10px 11px;">
+            <div class="cal-grid" id="cal-grid"></div>
+            <div class="shloka" style="margin-top:9px;">"Karmanye vadhikaraste, ma phaleshu kadachana"</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cal-col cal-col-right">
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title" id="entry-date-label">Select a date</div>
+          </div>
+          <div class="card-body">
+            <div class="entry-prompt" id="entry-prompt">Tap any date on the calendar to write your diary entry.</div>
+            <textarea id="entry-textarea" placeholder="Write your thoughts, tasks, or reflections for this day..." style="display:none;"></textarea>
+            <div class="entry-actions" id="entry-actions" style="display:none;">
+              <span class="status-msg" id="saved-msg"></span>
+              <button class="save-btn" onclick="saveEntry()" id="save-btn">Save Entry</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOME TASKS -->
+    <div class="panel" id="panel-home">
+      <div class="section-head">
+        <div class="section-dot" style="background:#C2456E;"></div>
+        <div class="section-title">Home To-Do</div>
+        <div class="section-count" id="home-count">0/0 done</div>
+      </div>
+      <div class="add-row">
+        <input type="text" id="home-input" placeholder="Add a home task..." onkeydown="if(event.key==='Enter')addTodo('home')" />
+        <select id="home-pri">
+          <option value="med">Medium</option>
+          <option value="high">High</option>
+          <option value="low">Low</option>
+        </select>
+        <button class="add-btn" onclick="addTodo('home')">+ Add</button>
+      </div>
+      <ul class="todo-list" id="home-list"></ul>
+      <div class="shloka" style="margin-top:10px;">"The home is where dharma begins." &mdash; Tend to it with care.</div>
+    </div>
+
+    <!-- WORK TASKS -->
+    <div class="panel" id="panel-work">
+      <div class="section-head">
+        <div class="section-dot" style="background:#C9921A;"></div>
+        <div class="section-title">Work To-Do</div>
+        <div class="section-count" id="work-count">0/0 done</div>
+      </div>
+      <div class="add-row">
+        <input type="text" id="work-input" placeholder="Add a work task..." onkeydown="if(event.key==='Enter')addTodo('work')" />
+        <select id="work-pri">
+          <option value="med">Medium</option>
+          <option value="high">High</option>
+          <option value="low">Low</option>
+        </select>
+        <button class="add-btn" onclick="addTodo('work')">+ Add</button>
+      </div>
+      <ul class="todo-list" id="work-list"></ul>
+      <div class="shloka" style="margin-top:10px;">"Yoga karmasu kaushalam" &mdash; Excellence in action is yoga. &mdash; Bhagavad Gita</div>
+    </div>
+
+    <!-- NOTES -->
+    <div class="panel" id="panel-notes">
+      <div class="notes-scroll">
+        <div class="notes-grid" id="notes-grid"></div>
+      </div>
+      <div class="new-note-card">
+        <div class="new-note-label">Add a New Note</div>
+        <input type="text" id="note-title-input" placeholder="Note title..." style="margin-bottom:7px;width:100%;" />
+        <textarea id="note-body-input" placeholder="Write anything &mdash; ideas, plans, reflections..." style="min-height:70px;"></textarea>
+        <button class="add-note-btn" onclick="addNote()">+ Save Note</button>
+      </div>
+      <div class="shloka" style="margin-top:9px;">"Svadhyaya" &mdash; Self-study and reflection are a sacred practice.</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DOWS=['Su','Mo','Tu','We','Th','Fr','Sa'];
+const PRI_LABELS={high:'High',med:'Medium',low:'Low'};
+const PRI_CLS={high:'pri-high',med:'pri-med',low:'pri-low'};
+let cfg={scriptUrl:''};
+let S={year:2026,month:new Date().getMonth(),selectedDate:null,entries:{},homeTodos:[],workTodos:[],notes:[]};
+
+function loadConfig(){try{const s=localStorage.getItem('diary_cfg');if(s)cfg=JSON.parse(s);}catch(e){}}
+function saveConfig(){
+  const url=document.getElementById('script-url-input').value.trim();
+  if(!url||!url.startsWith('https://script.google.com')){alert('Please enter a valid Google Apps Script URL.');return;}
+  cfg.scriptUrl=url;localStorage.setItem('diary_cfg',JSON.stringify(cfg));
+  document.getElementById('setup-modal').style.display='none';loadData();
+}
+function openSettings(){document.getElementById('script-url-input').value=cfg.scriptUrl||'';document.getElementById('setup-modal').style.display='flex';}
+function setStatus(st,msg){
+  const dot=document.getElementById('status-dot'),txt=document.getElementById('status-text');
+  dot.className='status-dot'+(st==='ok'?' connected':st==='error'?' error':'');txt.textContent=msg;
+}
+async function apiGet(action){if(!cfg.scriptUrl)return null;try{const r=await fetch(cfg.scriptUrl+'?action='+action);return await r.json();}catch(e){return null;}}
+async function apiPost(action,data={}){if(!cfg.scriptUrl)return null;try{const r=await fetch(cfg.scriptUrl,{method:'POST',body:JSON.stringify({action,...data})});return await r.json();}catch(e){return null;}}
+async function loadData(){
+  setStatus('','Loading your diary...');
+  const result=await apiGet('getData');
+  if(!result||result.error){setStatus('error','Could not connect. Check Settings.');loadLocal();return;}
+  S.entries=result.entries||{};S.homeTodos=result.homeTodos||[];S.workTodos=result.workTodos||[];S.notes=result.notes||[];
+  setStatus('ok','Connected · Google Sheets synced');renderAll();
+}
+function loadLocal(){try{const d=JSON.parse(localStorage.getItem('diary_data')||'{}');S.entries=d.entries||{};S.homeTodos=d.homeTodos||[];S.workTodos=d.workTodos||[];S.notes=d.notes||[];}catch(e){}renderAll();}
+function saveLocal(){localStorage.setItem('diary_data',JSON.stringify({entries:S.entries,homeTodos:S.homeTodos,workTodos:S.workTodos,notes:S.notes}));}
+function setYear(y){S.year=y;document.querySelectorAll('.year-btn').forEach(t=>t.classList.remove('active'));document.getElementById('ytab-'+y).classList.add('active');renderCalendar();}
+function switchTab(name){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById('panel-'+name).classList.add('active');document.getElementById('tab-'+name).classList.add('active');}
+function dk(y,m,d){return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;}
+function renderCalendar(){
+  const{year,month}=S;
+  document.getElementById('cal-month-label').textContent=`${MONTHS[month]} ${year}`;
+  const grid=document.getElementById('cal-grid');
+  grid.innerHTML=DOWS.map(d=>`<div class="dow">${d}</div>`).join('');
+  const first=new Date(year,month,1).getDay(),days=new Date(year,month+1,0).getDate(),prev=new Date(year,month,0).getDate();
+  const today=new Date();
+  for(let i=0;i<first;i++)grid.innerHTML+=`<div class="day other-month empty">${prev-first+1+i}</div>`;
+  for(let d=1;d<=days;d++){
+    const k=dk(year,month,d);
+    const isToday=today.getFullYear()===year&&today.getMonth()===month&&today.getDate()===d;
+    const isSel=S.selectedDate===k,hasEntry=!!S.entries[k];
+    let cls='day';if(isToday)cls+=' today';if(isSel)cls+=' selected';if(hasEntry)cls+=' has-entry';
+    grid.innerHTML+=`<div class="${cls}" onclick="selectDate('${k}')">${d}</div>`;
+  }
+  const rem=(first+days)%7;if(rem>0)for(let d=1;d<=7-rem;d++)grid.innerHTML+=`<div class="day other-month empty">${d}</div>`;
+}
+function selectDate(k){
+  S.selectedDate=k;const[y,m,d]=k.split('-');
+  const dt=new Date(+y,+m-1,+d);
+  document.getElementById('entry-date-label').textContent=dt.toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('entry-prompt').style.display='none';
+  document.getElementById('entry-textarea').style.display='block';
+  document.getElementById('entry-actions').style.display='flex';
+  document.getElementById('entry-textarea').value=S.entries[k]||'';
+  const msg=document.getElementById('saved-msg');msg.textContent='';msg.className='status-msg';
+  renderCalendar();
+}
+async function saveEntry(){
+  if(!S.selectedDate)return;
+  const btn=document.getElementById('save-btn'),msg=document.getElementById('saved-msg');
+  const val=document.getElementById('entry-textarea').value.trim();
+  btn.disabled=true;btn.textContent='Saving...';
+  if(val)S.entries[S.selectedDate]=val;else delete S.entries[S.selectedDate];
+  saveLocal();
+  const result=await apiPost('saveEntry',{date:S.selectedDate,text:val});
+  btn.disabled=false;btn.textContent='Save Entry';
+  msg.textContent=result&&result.ok?'✓ Saved to Google Sheets':'✓ Saved locally';
+  msg.className='status-msg show';setTimeout(()=>msg.classList.remove('show'),3000);
+  renderCalendar();
+}
+function prevMonth(){
+  if(S.month===0){if(S.year===2026)return;S.year--;S.month=11;document.querySelectorAll('.year-btn').forEach(t=>t.classList.remove('active'));document.getElementById('ytab-'+S.year).classList.add('active');}
+  else S.month--;renderCalendar();
+}
+function nextMonth(){
+  if(S.month===11){if(S.year===2027)return;S.year++;S.month=0;document.querySelectorAll('.year-btn').forEach(t=>t.classList.remove('active'));document.getElementById('ytab-'+S.year).classList.add('active');}
+  else S.month++;renderCalendar();
+}
+async function addTodo(type){
+  const inp=document.getElementById(type+'-input'),pri=document.getElementById(type+'-pri').value,text=inp.value.trim();
+  if(!text)return;const item={id:Date.now().toString(),text,done:false,pri};
+  if(type==='home')S.homeTodos.push(item);else S.workTodos.push(item);
+  inp.value='';renderTodos(type);saveLocal();
+  await apiPost('saveTodos',{type,todos:JSON.stringify(type==='home'?S.homeTodos:S.workTodos)});
+}
+async function toggleTodo(type,id){
+  const arr=type==='home'?S.homeTodos:S.workTodos,item=arr.find(i=>i.id===id);
+  if(item)item.done=!item.done;renderTodos(type);saveLocal();
+  await apiPost('saveTodos',{type,todos:JSON.stringify(arr)});
+}
+async function deleteTodo(type,id){
+  if(type==='home')S.homeTodos=S.homeTodos.filter(i=>i.id!==id);else S.workTodos=S.workTodos.filter(i=>i.id!==id);
+  renderTodos(type);saveLocal();
+  await apiPost('saveTodos',{type,todos:JSON.stringify(type==='home'?S.homeTodos:S.workTodos)});
+}
+function renderTodos(type){
+  const arr=type==='home'?S.homeTodos:S.workTodos,list=document.getElementById(type+'-list'),count=document.getElementById(type+'-count');
+  count.textContent=`${arr.filter(i=>i.done).length}/${arr.length} done`;
+  if(!arr.length){list.innerHTML='<div class="empty-state">No tasks yet. Add one above.</div>';return;}
+  list.innerHTML=arr.map(item=>`
+    <li class="todo-item">
+      <div class="check-box${item.done?' done':''}" onclick="toggleTodo('${type}','${item.id}')">${item.done?'&#10003;':''}</div>
+      <span class="todo-text${item.done?' done':''}">${item.text}</span>
+      <span class="pri-badge ${PRI_CLS[item.pri]}">${PRI_LABELS[item.pri]}</span>
+      <button class="del-btn" onclick="deleteTodo('${type}','${item.id}')">&#10005;</button>
+    </li>`).join('');
+}
+async function addNote(){
+  const title=document.getElementById('note-title-input').value.trim(),body=document.getElementById('note-body-input').value.trim();
+  if(!title&&!body)return;
+  S.notes.push({id:Date.now().toString(),title:title||'Note',body});
+  document.getElementById('note-title-input').value='';document.getElementById('note-body-input').value='';
+  renderNotes();saveLocal();await apiPost('saveNotes',{notes:JSON.stringify(S.notes)});
+}
+async function deleteNote(id){
+  S.notes=S.notes.filter(n=>n.id!==id);renderNotes();saveLocal();await apiPost('saveNotes',{notes:JSON.stringify(S.notes)});
+}
+function renderNotes(){
+  const grid=document.getElementById('notes-grid');
+  if(!S.notes.length){grid.innerHTML='<div class="empty-state" style="grid-column:1/-1">No notes yet.</div>';return;}
+  grid.innerHTML=S.notes.map(n=>`
+    <div class="note-card">
+      <button class="note-del" onclick="deleteNote('${n.id}')">&#10005;</button>
+      <div class="note-card-title">${n.title}</div>
+      <div class="note-card-body">${n.body||'&mdash;'}</div>
+    </div>`).join('');
+}
+function renderAll(){renderCalendar();renderTodos('home');renderTodos('work');renderNotes();}
+
+loadConfig();
+const now=new Date();
+if(now.getFullYear()>=2026&&now.getFullYear()<=2027){S.year=now.getFullYear();S.month=now.getMonth();}
+if(!cfg.scriptUrl){
+  document.getElementById('setup-modal').style.display='flex';
+  setStatus('error','Not connected — click Settings to add your Script URL.');
+  loadLocal();renderAll();
+}else{
+  document.getElementById('setup-modal').style.display='none';loadData();
+}
+</script>
+</body>
+</html>
