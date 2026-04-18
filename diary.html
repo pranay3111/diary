@@ -2,412 +2,693 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Pranay's Divine Diary</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --crimson: #6B1A2A;
-    --crimson-dark: #4A0F1C;
-    --gold: #C9921A;
-    --gold-light: #FBF0D8;
-    --lotus: #C2456E;
-    --cream: #FDFAF4;
-    --deep: #2C1A0E;
-    --muted: #7A5C3A;
-    --border: rgba(201,146,26,0.22);
-    --shadow: 0 2px 12px rgba(107,26,42,0.07);
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #FDF8F0;
+  --warm: #F7EFE0;
+  --gold: #C9921A;
+  --gold-light: #F5DFA0;
+  --gold-pale: #FBF3DC;
+  --crimson: #8B3A4A;
+  --crimson-soft: #B05060;
+  --lotus: #C2607A;
+  --teal: #4A8B8B;
+  --sand: #E8D5B0;
+  --deep: #3A2510;
+  --muted: #8A6A4A;
+  --border: rgba(201,146,26,0.18);
+  --shadow-sm: 0 2px 8px rgba(58,37,16,0.06);
+  --shadow-md: 0 4px 20px rgba(58,37,16,0.10);
+  --shadow-lg: 0 8px 32px rgba(58,37,16,0.13);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--cream);
+  color: var(--deep);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-  html, body {
-    height: 100%;
-    font-family: 'Lato', sans-serif;
-    background: #F4EFE6;
-    color: #2C1A0E;
-    overflow: hidden;
-  }
+/* ── ANIMATIONS ── */
+@keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes floatEl { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-6px);} }
+@keyframes shimmer { 0%{opacity:.7;} 50%{opacity:1;} 100%{opacity:.7;} }
+@keyframes slideDown { from{opacity:0;transform:translateY(-8px);} to{opacity:1;transform:translateY(0);} }
 
-  #app {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    max-width: 900px;
-    margin: 0 auto;
-  }
+.fade-up { animation: fadeUp 0.45s ease both; }
+.fade-in { animation: fadeIn 0.35s ease both; }
 
-  /* HEADER */
-  header {
-    background: linear-gradient(135deg, #4A0F1C 0%, #7A3D0A 55%, #4A0F1C 100%);
-    padding: 10px 18px;
-    display: flex; align-items: center; justify-content: space-between;
-    flex-shrink: 0;
-    box-shadow: 0 2px 16px rgba(74,15,28,0.35);
-  }
-  .header-left { display: flex; align-items: center; gap: 12px; }
-  .vedic-symbol {
-    width: 38px; height: 38px;
-    flex-shrink: 0;
-  }
-  .header-title { font-family: 'Cinzel', serif; font-size: 16px; color: #FFE0A0; font-weight: 500; letter-spacing: 0.8px; }
-  .header-sub { font-size: 10px; color: rgba(255,224,160,0.55); margin-top: 1px; letter-spacing: 0.4px; }
-  .year-switcher { display: flex; gap: 5px; }
-  .year-btn {
-    font-family: 'Cinzel', serif; font-size: 12px;
-    background: rgba(255,224,160,0.1); color: rgba(255,224,160,0.65);
-    border: 1px solid rgba(255,224,160,0.18); border-radius: 5px;
-    padding: 5px 13px; cursor: pointer; transition: all 0.18s;
-  }
-  .year-btn.active { background: rgba(255,224,160,0.22); color: #FFE8B0; border-color: rgba(255,224,160,0.4); }
-  .year-btn:hover { background: rgba(255,224,160,0.18); }
+/* ── HEADER ── */
+header {
+  background: linear-gradient(160deg, #5C1A28 0%, #8B4A1A 40%, #6B3A2A 70%, #3A1A2A 100%);
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+.header-bg-pattern {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle at 20% 50%, rgba(255,215,100,0.08) 0%, transparent 60%),
+    radial-gradient(circle at 80% 30%, rgba(255,180,150,0.07) 0%, transparent 50%);
+  pointer-events: none;
+}
+.header-inner {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 20px 20px 14px;
+  gap: 10px;
+}
+.header-illustration {
+  width: 100%; max-width: 380px;
+  animation: floatEl 5s ease-in-out infinite;
+}
+.header-text { text-align: center; }
+.header-title {
+  font-family: 'Cinzel', serif; font-size: clamp(16px,4vw,22px);
+  color: #FFE8A0; font-weight: 500; letter-spacing: 1.5px;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+.header-sub { font-size: 11px; color: rgba(255,232,160,0.55); letter-spacing: 1px; margin-top: 3px; }
+.header-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; padding: 0 4px;
+}
+.year-switcher { display: flex; gap: 6px; }
+.year-btn {
+  font-family: 'Cinzel', serif; font-size: 12px;
+  background: rgba(255,232,160,0.1); color: rgba(255,232,160,0.65);
+  border: 1px solid rgba(255,232,160,0.2); border-radius: 8px;
+  padding: 5px 14px; cursor: pointer; transition: all 0.2s;
+}
+.year-btn.active { background: rgba(255,232,160,0.22); color: #FFE8A0; border-color: rgba(255,232,160,0.45); }
+.year-btn:hover { background: rgba(255,232,160,0.18); }
 
-  /* NAV */
-  nav {
-    background: #fff;
-    border-bottom: 1px solid rgba(201,146,26,0.13);
-    display: flex;
-    flex-shrink: 0;
-  }
-  .nav-tab {
-    flex: 1; padding: 10px 6px; text-align: center;
-    font-size: 12px; cursor: pointer;
-    color: #7A5C3A; border-bottom: 3px solid transparent;
-    transition: all 0.18s; display: flex; align-items: center; justify-content: center; gap: 5px;
-  }
-  .nav-tab.active { color: #6B1A2A; border-bottom-color: #C9921A; font-weight: 700; }
-  .nav-tab:hover:not(.active) { color: #2C1A0E; background: #FFF8F0; }
-  .tab-icon { font-size: 14px; }
+/* ── GITA QUOTE BANNER ── */
+.quote-banner {
+  background: linear-gradient(135deg, var(--gold-pale), #FFF8E8);
+  border-bottom: 1px solid rgba(201,146,26,0.15);
+  padding: 10px 20px;
+  animation: slideDown 0.5s ease 0.2s both;
+}
+.quote-text { font-size: 12px; color: var(--crimson); font-style: italic; line-height: 1.6; text-align: center; }
+.quote-meaning { font-size: 11px; color: var(--muted); text-align: center; margin-top: 3px; }
+.quote-ref { font-size: 10px; color: var(--gold); font-weight: 700; text-align: center; margin-top: 2px; letter-spacing: 0.5px; }
 
-  /* STATUS BAR */
-  .status-bar {
-    background: rgba(107,26,42,0.05); border-bottom: 1px solid rgba(201,146,26,0.1);
-    padding: 5px 16px; font-size: 11px; color: #7A5C3A;
-    display: flex; align-items: center; gap: 7px;
-    flex-shrink: 0;
-  }
-  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #C9B89A; flex-shrink: 0; }
-  .status-dot.connected { background: #3B6D11; }
-  .status-dot.error { background: #A32D2D; }
-  .settings-link { font-size: 11px; color: #C9921A; cursor: pointer; text-decoration: underline; margin-left: auto; }
+/* ── NAV ── */
+nav {
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  box-shadow: var(--shadow-sm);
+  position: sticky; top: 0; z-index: 50;
+}
+.nav-tab {
+  flex: 1; padding: 12px 4px 10px; text-align: center;
+  font-size: 11px; font-weight: 600; cursor: pointer;
+  color: var(--muted); border-bottom: 3px solid transparent;
+  transition: all 0.2s; display: flex; flex-direction: column;
+  align-items: center; gap: 3px; letter-spacing: 0.3px;
+}
+.nav-tab .tab-icon { font-size: 18px; transition: transform 0.2s; }
+.nav-tab.active { color: var(--crimson); border-bottom-color: var(--gold); }
+.nav-tab.active .tab-icon { transform: scale(1.15); }
+.nav-tab:hover:not(.active) { color: var(--deep); background: var(--gold-pale); }
 
-  /* CONTENT */
-  #content { flex: 1; overflow: hidden; position: relative; }
+/* ── STATUS BAR ── */
+.status-bar {
+  background: var(--warm); border-bottom: 1px solid var(--border);
+  padding: 6px 16px; font-size: 11px; color: var(--muted);
+  display: flex; align-items: center; gap: 7px;
+}
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: #C9B89A; flex-shrink: 0; transition: background 0.3s; }
+.status-dot.connected { background: #4A8B5A; }
+.status-dot.error { background: #A32D2D; }
+.settings-link { font-size: 11px; color: var(--gold); cursor: pointer; text-decoration: none; margin-left: auto; font-weight: 700; }
 
-  .panel {
-    display: none;
-    height: 100%;
-    overflow-y: auto;
-    padding: 14px;
-    flex-direction: column;
-  }
-  .panel.active { display: flex; }
+/* ── MAIN CONTENT ── */
+main { padding: 16px 14px 80px; max-width: 860px; margin: 0 auto; }
+.panel { display: none; }
+.panel.active { display: block; animation: fadeUp 0.35s ease; }
 
-  /* CALENDAR — side by side, no scroll */
-  #panel-calendar {
-    flex-direction: row !important;
-    gap: 12px;
-    overflow: hidden !important;
-    padding: 12px;
-  }
+/* ── WEATHER + DATE WIDGET ── */
+.diary-top { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+@media(max-width:480px){ .diary-top { grid-template-columns: 1fr; } }
 
-  .cal-col { display: flex; flex-direction: column; }
-  .cal-col-left { flex: 0 0 270px; }
-  .cal-col-right { flex: 1; min-width: 0; }
+.widget-card {
+  background: #fff; border-radius: var(--radius); border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm); padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.widget-icon { font-size: 32px; animation: floatEl 4s ease-in-out infinite; flex-shrink: 0; }
+.widget-label { font-size: 10px; color: var(--muted); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+.widget-value { font-size: 20px; font-weight: 700; color: var(--deep); line-height: 1.2; }
+.widget-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
-  @media (max-width: 580px) {
-    #panel-calendar { flex-direction: column !important; overflow-y: auto !important; }
-    .cal-col-left { flex: none; }
-  }
+/* ── CALENDAR ── */
+.cal-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media(max-width:560px){ .cal-layout { grid-template-columns: 1fr; } }
 
-  .card {
-    background: #fff;
-    border-radius: 11px;
-    border: 1px solid rgba(201,146,26,0.13);
-    box-shadow: var(--shadow);
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-  .card-head {
-    padding: 10px 14px 9px;
-    border-bottom: 1px solid rgba(201,146,26,0.1);
-    flex-shrink: 0;
-  }
-  .card-title { font-family: 'Cinzel', serif; font-size: 11px; color: #6B1A2A; letter-spacing: 0.4px; }
-  .card-body { padding: 11px 13px; flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.card {
+  background: #fff; border-radius: var(--radius);
+  border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+  overflow: hidden; transition: box-shadow 0.2s;
+}
+.card:hover { box-shadow: var(--shadow-md); }
+.card-head {
+  padding: 13px 16px 11px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, var(--gold-pale), #fff);
+}
+.card-title { font-family: 'Cinzel', serif; font-size: 12px; color: var(--crimson); letter-spacing: 0.5px; }
+.card-body { padding: 14px 16px; }
 
-  /* COMPACT CALENDAR GRID */
-  .cal-nav-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; }
-  .cal-nav-btn {
-    background: none; border: 1px solid rgba(201,146,26,0.22); border-radius: 5px;
-    padding: 3px 10px; cursor: pointer; color: #7A5C3A; font-size: 12px;
-    font-family: 'Lato', sans-serif; transition: all 0.13s;
-  }
-  .cal-nav-btn:hover { background: #FFF3E0; color: #6B1A2A; }
-  .cal-month-label { font-family: 'Cinzel', serif; font-size: 12px; color: #2C1A0E; }
+.cal-nav-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.cal-nav-btn {
+  background: var(--warm); border: 1px solid var(--border); border-radius: 8px;
+  padding: 5px 12px; cursor: pointer; color: var(--muted); font-size: 14px;
+  font-family: 'Nunito', sans-serif; transition: all 0.15s; font-weight: 700;
+}
+.cal-nav-btn:hover { background: var(--gold-pale); color: var(--crimson); border-color: var(--gold); }
+.cal-month-label { font-family: 'Cinzel', serif; font-size: 13px; color: var(--deep); }
 
-  .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; }
-  .dow { text-align: center; font-size: 9px; color: #7A5C3A; padding: 3px 0; font-weight: 700; letter-spacing: 0.3px; }
-  .day {
-    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
-    font-size: 11px; cursor: pointer; border-radius: 5px;
-    color: #2C1A0E; transition: all 0.1s; position: relative;
-  }
-  .day:hover { background: #FFF3E0; color: #6B1A2A; }
-  .day.today { background: #6B1A2A; color: #FFE0A0; font-weight: 700; }
-  .day.selected { background: #C9921A; color: #fff; font-weight: 700; }
-  .day.has-entry::after {
-    content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
-    width: 3px; height: 3px; border-radius: 50%; background: #C2456E;
-  }
-  .day.today.has-entry::after, .day.selected.has-entry::after { background: rgba(255,255,255,0.65); }
-  .day.other-month { color: #C9B89A; opacity: 0.4; }
-  .day.empty { cursor: default; pointer-events: none; }
+.cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
+.dow { text-align: center; font-size: 9px; color: var(--muted); padding: 4px 0; font-weight: 700; letter-spacing: 0.5px; }
+.day {
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  font-size: 12px; cursor: pointer; border-radius: 8px;
+  color: var(--deep); transition: all 0.15s; position: relative; font-weight: 600;
+}
+.day:hover { background: var(--gold-pale); color: var(--crimson); transform: scale(1.08); }
+.day.today { background: var(--crimson); color: #fff; font-weight: 700; box-shadow: 0 2px 8px rgba(139,58,74,0.3); }
+.day.selected { background: var(--gold); color: #fff; font-weight: 700; box-shadow: 0 2px 8px rgba(201,146,26,0.35); }
+.day.has-entry::after {
+  content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
+  width: 4px; height: 4px; border-radius: 50%; background: var(--lotus);
+}
+.day.today.has-entry::after, .day.selected.has-entry::after { background: rgba(255,255,255,0.7); }
+.day.other-month { color: #C9B89A; opacity: 0.4; }
+.day.empty { cursor: default; pointer-events: none; }
 
-  /* ENTRY */
-  .entry-prompt { font-size: 12px; color: #C9B89A; font-style: italic; text-align: center; margin: auto; }
-  textarea {
-    width: 100%; border: 1px solid rgba(201,146,26,0.22); border-radius: 7px;
-    padding: 10px; font-size: 12px; font-family: 'Lato', sans-serif;
-    color: #2C1A0E; background: #FDFAF4; resize: none; outline: none;
-    line-height: 1.7; flex: 1; transition: border 0.13s; min-height: 0;
-  }
-  textarea:focus { border-color: #C9921A; }
-  .entry-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; flex-shrink: 0; }
-  .save-btn {
-    background: #6B1A2A; color: #FFE0A0; border: none; border-radius: 7px;
-    padding: 7px 16px; font-size: 12px; font-family: 'Lato', sans-serif;
-    cursor: pointer; font-weight: 700; transition: background 0.13s;
-  }
-  .save-btn:hover { background: #8B2A3A; }
-  .save-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-  .status-msg { font-size: 11px; color: #3B6D11; opacity: 0; transition: opacity 0.3s; }
-  .status-msg.show { opacity: 1; }
+/* ENTRY */
+.entry-prompt { font-size: 13px; color: #C9B89A; font-style: italic; text-align: center; padding: 30px 10px; }
+.entry-textarea {
+  width: 100%; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  padding: 12px; font-size: 13px; font-family: 'Nunito', sans-serif;
+  color: var(--deep); background: var(--cream); resize: vertical; outline: none;
+  line-height: 1.8; min-height: 160px; transition: border 0.2s;
+  display: none;
+}
+.entry-textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,146,26,0.1); }
+.entry-actions { display: none; align-items: center; justify-content: space-between; margin-top: 10px; }
+.save-btn {
+  background: linear-gradient(135deg, var(--crimson), var(--crimson-soft));
+  color: #FFE8A0; border: none; border-radius: var(--radius-sm);
+  padding: 9px 22px; font-size: 13px; font-family: 'Nunito', sans-serif;
+  cursor: pointer; font-weight: 700; transition: all 0.2s;
+  box-shadow: 0 3px 10px rgba(139,58,74,0.25);
+}
+.save-btn:hover { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(139,58,74,0.3); }
+.save-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.status-msg { font-size: 12px; color: #3B7D4A; opacity: 0; transition: opacity 0.3s; font-weight: 600; }
+.status-msg.show { opacity: 1; }
 
-  .shloka { font-size: 10px; color: #7A5C3A; font-style: italic; text-align: center; padding: 8px 0 0; opacity: 0.75; line-height: 1.6; flex-shrink: 0; }
+/* ── TODOS ── */
+.section-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.section-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.section-title { font-family: 'Cinzel', serif; font-size: 15px; color: var(--deep); }
+.section-count { font-size: 12px; color: var(--muted); margin-left: auto; background: var(--warm); padding: 3px 10px; border-radius: 20px; font-weight: 600; }
 
-  /* TODOS */
-  .section-head { display: flex; align-items: center; gap: 8px; margin-bottom: 11px; flex-shrink: 0; }
-  .section-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .section-title { font-family: 'Cinzel', serif; font-size: 13px; color: #2C1A0E; }
-  .section-count { font-size: 11px; color: #7A5C3A; margin-left: auto; }
+.add-row { display: flex; gap: 8px; margin-bottom: 14px; }
+.add-input {
+  flex: 1; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  padding: 10px 14px; font-size: 13px; font-family: 'Nunito', sans-serif;
+  color: var(--deep); background: var(--cream); outline: none; transition: border 0.2s; font-weight: 600;
+}
+.add-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,146,26,0.1); }
+.pri-select {
+  border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  padding: 10px 8px; font-size: 12px; font-family: 'Nunito', sans-serif;
+  color: var(--deep); background: var(--cream); outline: none; cursor: pointer; font-weight: 600;
+}
+.add-btn {
+  background: linear-gradient(135deg, var(--gold), #E0A830);
+  color: #fff; border: none; border-radius: var(--radius-sm);
+  padding: 10px 16px; font-size: 13px; cursor: pointer; font-family: 'Nunito', sans-serif;
+  font-weight: 700; transition: all 0.2s; white-space: nowrap;
+  box-shadow: 0 3px 10px rgba(201,146,26,0.25);
+}
+.add-btn:hover { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(201,146,26,0.3); }
 
-  .add-row { display: flex; gap: 7px; margin-bottom: 11px; flex-shrink: 0; }
-  input[type="text"] {
-    flex: 1; border: 1px solid rgba(201,146,26,0.22); border-radius: 7px;
-    padding: 8px 11px; font-size: 12px; font-family: 'Lato', sans-serif;
-    color: #2C1A0E; background: #FDFAF4; outline: none; transition: border 0.13s;
-  }
-  input[type="text"]:focus { border-color: #C9921A; }
-  select {
-    border: 1px solid rgba(201,146,26,0.22); border-radius: 7px;
-    padding: 8px 7px; font-size: 11px; font-family: 'Lato', sans-serif;
-    color: #2C1A0E; background: #FDFAF4; outline: none; cursor: pointer;
-  }
-  .add-btn {
-    background: none; border: 1px solid rgba(201,146,26,0.32); border-radius: 7px;
-    padding: 8px 13px; font-size: 12px; cursor: pointer; color: #6B1A2A;
-    font-family: 'Lato', sans-serif; font-weight: 700; transition: all 0.13s; white-space: nowrap;
-  }
-  .add-btn:hover { background: #FFF3E0; }
+.todo-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.todo-item {
+  display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px;
+  background: #fff; border-radius: var(--radius-sm); border: 1.5px solid var(--border);
+  transition: all 0.2s; animation: fadeUp 0.3s ease both;
+}
+.todo-item:hover { border-color: rgba(201,146,26,0.3); box-shadow: var(--shadow-sm); transform: translateX(2px); }
+.check-box {
+  width: 18px; height: 18px; border-radius: 5px; border: 2px solid rgba(201,146,26,0.4);
+  cursor: pointer; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center;
+  justify-content: center; transition: all 0.15s; background: transparent; user-select: none; font-size: 11px;
+}
+.check-box.done { background: var(--gold); border-color: var(--gold); color: white; }
+.todo-text { flex: 1; font-size: 13px; color: var(--deep); line-height: 1.5; word-break: break-word; font-weight: 600; }
+.todo-text.done { text-decoration: line-through; color: #C9B89A; font-weight: 400; }
+.pri-badge { font-size: 10px; padding: 3px 8px; border-radius: 20px; flex-shrink: 0; font-weight: 700; letter-spacing: 0.3px; }
+.pri-high { background: #FCEBEB; color: #791F1F; }
+.pri-med { background: #FBF0D8; color: #633806; }
+.pri-low { background: #EAF3DE; color: #27500A; }
+.del-btn { background: none; border: none; color: #C9B89A; cursor: pointer; font-size: 15px; padding: 0 2px; flex-shrink: 0; font-family: 'Nunito', sans-serif; transition: color 0.15s; }
+.del-btn:hover { color: #A32D2D; }
 
-  .todo-list { list-style: none; display: flex; flex-direction: column; gap: 6px; overflow-y: auto; flex: 1; padding-right: 2px; }
-  .todo-item {
-    display: flex; align-items: flex-start; gap: 9px; padding: 8px 11px;
-    background: #FDFAF4; border-radius: 7px; border: 1px solid rgba(201,146,26,0.1); flex-shrink: 0;
-  }
-  .todo-item:hover { border-color: rgba(201,146,26,0.22); }
-  .check-box {
-    width: 15px; height: 15px; border-radius: 4px; border: 1.5px solid rgba(201,146,26,0.45);
-    cursor: pointer; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center;
-    justify-content: center; transition: all 0.1s; background: transparent; user-select: none; font-size: 10px;
-  }
-  .check-box.done { background: #C9921A; border-color: #C9921A; color: white; }
-  .todo-text { flex: 1; font-size: 12px; color: #2C1A0E; line-height: 1.5; word-break: break-word; }
-  .todo-text.done { text-decoration: line-through; color: #C9B89A; }
-  .pri-badge { font-size: 9px; padding: 2px 6px; border-radius: 4px; flex-shrink: 0; font-weight: 700; }
-  .pri-high { background: #FCEBEB; color: #791F1F; }
-  .pri-med { background: #FAEEDA; color: #633806; }
-  .pri-low { background: #EAF3DE; color: #27500A; }
-  .del-btn { background: none; border: none; color: #C9B89A; cursor: pointer; font-size: 13px; padding: 0 2px; flex-shrink: 0; font-family: 'Lato', sans-serif; transition: color 0.1s; }
-  .del-btn:hover { color: #A32D2D; }
+/* ── NOTES ── */
+.notes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 12px; margin-bottom: 16px; }
+.note-card {
+  background: #fff; border-radius: var(--radius); border: 1.5px solid var(--border);
+  padding: 14px; position: relative; box-shadow: var(--shadow-sm);
+  transition: all 0.2s; animation: fadeUp 0.3s ease both;
+}
+.note-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.note-card-title { font-family: 'Cinzel', serif; font-size: 12px; color: var(--crimson); margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--border); padding-right: 20px; }
+.note-card-body { font-size: 12px; color: var(--muted); line-height: 1.7; white-space: pre-wrap; }
+.note-del { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #C9B89A; cursor: pointer; font-size: 13px; transition: color 0.15s; }
+.note-del:hover { color: #A32D2D; }
 
-  /* NOTES */
-  .notes-scroll { flex: 1; overflow-y: auto; margin-bottom: 12px; }
-  .notes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px,1fr)); gap: 10px; }
-  .note-card { background: #fff; border-radius: 9px; border: 1px solid rgba(201,146,26,0.13); padding: 11px; position: relative; box-shadow: var(--shadow); }
-  .note-card-title { font-family: 'Cinzel', serif; font-size: 11px; color: #6B1A2A; margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid rgba(201,146,26,0.13); padding-right: 18px; }
-  .note-card-body { font-size: 12px; color: #7A5C3A; line-height: 1.6; white-space: pre-wrap; }
-  .note-del { position: absolute; top: 8px; right: 8px; background: none; border: none; color: #C9B89A; cursor: pointer; font-size: 12px; font-family: 'Lato', sans-serif; }
-  .note-del:hover { color: #A32D2D; }
-  .new-note-card { background: #fff; border-radius: 11px; border: 1px solid rgba(201,146,26,0.13); box-shadow: var(--shadow); padding: 13px; flex-shrink: 0; }
-  .new-note-label { font-family: 'Cinzel', serif; font-size: 11px; color: #6B1A2A; margin-bottom: 9px; }
-  .add-note-btn { background: #6B1A2A; color: #FFE0A0; border: none; border-radius: 7px; padding: 7px 16px; font-size: 12px; font-family: 'Lato', sans-serif; cursor: pointer; font-weight: 700; margin-top: 7px; transition: background 0.13s; }
-  .add-note-btn:hover { background: #8B2A3A; }
+.new-note-card { background: #fff; border-radius: var(--radius); border: 1.5px solid var(--border); box-shadow: var(--shadow-sm); padding: 16px; }
+.new-note-label { font-family: 'Cinzel', serif; font-size: 12px; color: var(--crimson); margin-bottom: 10px; }
+.note-input {
+  width: 100%; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  padding: 9px 12px; font-size: 13px; font-family: 'Nunito', sans-serif;
+  color: var(--deep); background: var(--cream); outline: none; font-weight: 600;
+  transition: border 0.2s; margin-bottom: 8px;
+}
+.note-input:focus { border-color: var(--gold); }
+.note-textarea {
+  width: 100%; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  padding: 9px 12px; font-size: 13px; font-family: 'Nunito', sans-serif;
+  color: var(--deep); background: var(--cream); outline: none; resize: vertical; min-height: 80px;
+  line-height: 1.7; transition: border 0.2s;
+}
+.note-textarea:focus { border-color: var(--gold); }
+.add-note-btn {
+  background: linear-gradient(135deg, var(--crimson), var(--crimson-soft));
+  color: #FFE8A0; border: none; border-radius: var(--radius-sm);
+  padding: 9px 20px; font-size: 13px; font-family: 'Nunito', sans-serif;
+  cursor: pointer; font-weight: 700; margin-top: 10px; transition: all 0.2s;
+  box-shadow: 0 3px 10px rgba(139,58,74,0.2);
+}
+.add-note-btn:hover { transform: translateY(-1px); }
 
-  .empty-state { text-align: center; color: #C9B89A; font-size: 12px; padding: 18px; font-style: italic; }
+.empty-state { text-align: center; color: #C9B89A; font-size: 13px; padding: 24px; font-style: italic; }
 
-  /* MODAL */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(44,26,14,0.55); z-index: 999; display: flex; align-items: center; justify-content: center; padding: 20px; }
-  .modal { background: #fff; border-radius: 14px; max-width: 440px; width: 100%; padding: 24px; box-shadow: 0 20px 50px rgba(44,26,14,0.28); }
-  .modal-title { font-family: 'Cinzel', serif; font-size: 15px; color: #6B1A2A; margin-bottom: 6px; }
-  .modal-sub { font-size: 12px; color: #7A5C3A; margin-bottom: 14px; line-height: 1.6; }
-  .modal-label { font-size: 11px; font-weight: 700; color: #2C1A0E; margin-bottom: 5px; }
-  .modal input { width: 100%; border: 1px solid rgba(201,146,26,0.28); border-radius: 7px; padding: 9px 11px; font-size: 12px; font-family: 'Lato', sans-serif; color: #2C1A0E; background: #FDFAF4; outline: none; }
-  .modal input:focus { border-color: #C9921A; }
-  .modal-save { background: #6B1A2A; color: #FFE0A0; border: none; border-radius: 7px; padding: 9px 20px; font-size: 12px; font-family: 'Lato', sans-serif; cursor: pointer; font-weight: 700; width: 100%; margin-top: 14px; transition: background 0.13s; }
-  .modal-save:hover { background: #8B2A3A; }
-  .modal-hint { font-size: 10px; color: #C9B89A; margin-top: 8px; line-height: 1.6; }
+/* ── SHLOKA ── */
+.shloka {
+  text-align: center; font-size: 11px; color: var(--muted); font-style: italic;
+  padding: 16px 20px 0; line-height: 1.7; opacity: 0.8;
+}
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(58,37,16,0.5); z-index: 999;
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+  backdrop-filter: blur(4px); animation: fadeIn 0.2s ease;
+}
+.modal {
+  background: #fff; border-radius: var(--radius); max-width: 440px; width: 100%;
+  padding: 28px; box-shadow: var(--shadow-lg); animation: fadeUp 0.3s ease;
+}
+.modal-title { font-family: 'Cinzel', serif; font-size: 16px; color: var(--crimson); margin-bottom: 6px; }
+.modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 16px; line-height: 1.7; }
+.modal-label { font-size: 11px; font-weight: 700; color: var(--deep); margin-bottom: 6px; letter-spacing: 0.3px; }
+.modal-input {
+  width: 100%; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  padding: 10px 13px; font-size: 13px; font-family: 'Nunito', sans-serif;
+  color: var(--deep); background: var(--cream); outline: none; font-weight: 600;
+}
+.modal-input:focus { border-color: var(--gold); }
+.modal-save {
+  background: linear-gradient(135deg, var(--crimson), var(--crimson-soft));
+  color: #FFE8A0; border: none; border-radius: var(--radius-sm);
+  padding: 11px 20px; font-size: 14px; font-family: 'Nunito', sans-serif;
+  cursor: pointer; font-weight: 700; width: 100%; margin-top: 16px; transition: all 0.2s;
+  box-shadow: 0 3px 12px rgba(139,58,74,0.25);
+}
+.modal-save:hover { transform: translateY(-1px); }
+.modal-hint { font-size: 11px; color: #C9B89A; margin-top: 10px; line-height: 1.6; }
+
+/* ── MOBILE BOTTOM NAV ── */
+@media(max-width:600px){
+  nav { position: fixed; bottom: 0; left: 0; right: 0; top: auto; border-bottom: none; border-top: 1px solid var(--border); box-shadow: 0 -2px 12px rgba(58,37,16,0.08); z-index: 100; }
+  .nav-tab { padding: 10px 4px 8px; }
+  main { padding-bottom: 90px; }
+}
 </style>
 </head>
 <body>
 
-<!-- SETUP MODAL -->
+<!-- MODAL -->
 <div class="modal-overlay" id="setup-modal">
   <div class="modal">
-    <div class="modal-title">&#x1F549; First-Time Setup</div>
-    <div class="modal-sub">Connect your Google Sheet to save and sync your diary across all devices.</div>
+    <div class="modal-title">First-Time Setup</div>
+    <div class="modal-sub">Connect your Google Sheet to save and sync your diary across all your devices.</div>
     <div class="modal-label">Google Apps Script Web App URL</div>
-    <input type="text" id="script-url-input" placeholder="https://script.google.com/macros/s/YOUR_ID/exec" />
-    <div class="modal-hint">Saved only in your browser. Your data goes directly to your own Google Sheet.</div>
-    <button class="modal-save" onclick="saveConfig()">Save &amp; Connect</button>
+    <input class="modal-input" type="text" id="script-url-input" placeholder="https://script.google.com/macros/s/YOUR_ID/exec" />
+    <div class="modal-hint">Saved only in your browser. Your data goes directly to your own Google Sheet — nothing is stored elsewhere.</div>
+    <button class="modal-save" onclick="saveConfig()">Save &amp; Connect &#10003;</button>
   </div>
 </div>
 
-<div id="app">
-  <header>
-    <div class="header-left">
-      <!-- Ancient Vedic Om — SVG drawn in classical style -->
-      <svg class="vedic-symbol" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <text x="4" y="30" font-size="28" font-family="serif" fill="#FFD07A" opacity="0.95">𑀅</text>
-      </svg>
-      <div>
-        <div class="header-title">Pranay's Divine Diary</div>
-        <div class="header-sub">Saraswati Namastubhyam &middot; 2026 &ndash; 2027</div>
+<!-- HEADER -->
+<header>
+  <div class="header-bg-pattern"></div>
+  <div class="header-inner">
+    <!-- SVG: White Elephant, Moon, Beach -->
+    <svg class="header-illustration" viewBox="0 0 380 120" xmlns="http://www.w3.org/2000/svg">
+      <!-- Sky gradient -->
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#3A1A2A" stop-opacity="0"/>
+          <stop offset="100%" stop-color="#8B4A1A" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1A3A5C"/>
+          <stop offset="100%" stop-color="#0A2030"/>
+        </linearGradient>
+        <linearGradient id="sand" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#D4A870"/>
+          <stop offset="100%" stop-color="#B8864A"/>
+        </linearGradient>
+        <radialGradient id="moon-glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#FFF8DC" stop-opacity="0.4"/>
+          <stop offset="100%" stop-color="#FFF8DC" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="moon-fill" cx="40%" cy="35%" r="60%">
+          <stop offset="0%" stop-color="#FFFEF0"/>
+          <stop offset="100%" stop-color="#FFE8A0"/>
+        </radialGradient>
+      </defs>
+
+      <!-- Ocean -->
+      <rect x="0" y="72" width="380" height="30" fill="url(#sea)" rx="0"/>
+      <!-- Waves -->
+      <path d="M0 76 Q20 72 40 76 Q60 80 80 76 Q100 72 120 76 Q140 80 160 76 Q180 72 200 76 Q220 80 240 76 Q260 72 280 76 Q300 80 320 76 Q340 72 360 76 Q370 78 380 76 L380 102 L0 102 Z" fill="#1E4A6A" opacity="0.6"/>
+      <path d="M0 80 Q25 76 50 80 Q75 84 100 80 Q125 76 150 80 Q175 84 200 80 Q225 76 250 80 Q275 84 300 80 Q325 76 350 80 Q365 82 380 80 L380 102 L0 102 Z" fill="#2A5C7A" opacity="0.4"/>
+
+      <!-- Beach / sand -->
+      <ellipse cx="190" cy="102" rx="200" ry="18" fill="url(#sand)"/>
+      <ellipse cx="190" cy="102" rx="200" ry="14" fill="#C89A58" opacity="0.5"/>
+
+      <!-- Moon glow -->
+      <circle cx="300" cy="28" r="30" fill="url(#moon-glow)"/>
+      <!-- Moon -->
+      <circle cx="300" cy="28" r="18" fill="url(#moon-fill)"/>
+      <!-- Moon crescent shadow -->
+      <circle cx="307" cy="24" r="15" fill="#6B3A1A" opacity="0.18"/>
+      <!-- Moon sparkle -->
+      <circle cx="293" cy="21" r="2" fill="#fff" opacity="0.7"/>
+      <circle cx="308" cy="33" r="1.5" fill="#fff" opacity="0.5"/>
+
+      <!-- Stars -->
+      <circle cx="30" cy="15" r="1.5" fill="#FFE8A0" opacity="0.8"><animate attributeName="opacity" values="0.8;0.3;0.8" dur="2.5s" repeatCount="indefinite"/></circle>
+      <circle cx="80" cy="8" r="1" fill="#FFE8A0" opacity="0.6"><animate attributeName="opacity" values="0.6;0.2;0.6" dur="3.2s" repeatCount="indefinite"/></circle>
+      <circle cx="150" cy="12" r="1.5" fill="#FFE8A0" opacity="0.7"><animate attributeName="opacity" values="0.7;0.25;0.7" dur="2.8s" repeatCount="indefinite"/></circle>
+      <circle cx="220" cy="6" r="1" fill="#FFE8A0" opacity="0.5"><animate attributeName="opacity" values="0.5;0.15;0.5" dur="3.5s" repeatCount="indefinite"/></circle>
+      <circle cx="340" cy="10" r="1.5" fill="#FFE8A0" opacity="0.65"><animate attributeName="opacity" values="0.65;0.2;0.65" dur="2.2s" repeatCount="indefinite"/></circle>
+      <circle cx="60" cy="30" r="1" fill="#FFE8A0" opacity="0.4"><animate attributeName="opacity" values="0.4;0.1;0.4" dur="4s" repeatCount="indefinite"/></circle>
+
+      <!-- Moon reflection on water -->
+      <ellipse cx="300" cy="80" rx="12" ry="4" fill="#FFE8A0" opacity="0.2"/>
+      <ellipse cx="300" cy="85" rx="8" ry="2.5" fill="#FFE8A0" opacity="0.12"/>
+
+      <!-- Palm tree left -->
+      <rect x="18" y="55" width="4" height="40" rx="2" fill="#5A3A1A"/>
+      <ellipse cx="20" cy="55" rx="14" ry="8" fill="#2A6A2A" transform="rotate(-15 20 55)"/>
+      <ellipse cx="20" cy="55" rx="14" ry="6" fill="#3A8A3A" transform="rotate(10 20 55)"/>
+      <ellipse cx="20" cy="55" rx="12" ry="5" fill="#2A6A2A" transform="rotate(35 20 55)"/>
+
+      <!-- Palm tree right -->
+      <rect x="358" y="50" width="4" height="45" rx="2" fill="#5A3A1A"/>
+      <ellipse cx="360" cy="50" rx="14" ry="7" fill="#2A6A2A" transform="rotate(15 360 50)"/>
+      <ellipse cx="360" cy="50" rx="13" ry="6" fill="#3A8A3A" transform="rotate(-10 360 50)"/>
+      <ellipse cx="360" cy="50" rx="11" ry="5" fill="#2A6A2A" transform="rotate(-35 360 50)"/>
+
+      <!-- WHITE ELEPHANT (centre, prominent) -->
+      <!-- Body -->
+      <ellipse cx="185" cy="88" rx="38" ry="26" fill="#F0EEE8"/>
+      <!-- Head -->
+      <circle cx="160" cy="74" r="20" fill="#F0EEE8"/>
+      <!-- Ear -->
+      <ellipse cx="145" cy="76" rx="10" ry="14" fill="#E8D8D0"/>
+      <ellipse cx="145" cy="76" rx="7" ry="10" fill="#F5C0B0" opacity="0.6"/>
+      <!-- Trunk -->
+      <path d="M148 84 Q135 96 138 108 Q140 114 145 112 Q148 110 145 104 Q143 96 155 88" fill="#E8E4DC" stroke="#D0CCC4" stroke-width="0.5"/>
+      <!-- Eye -->
+      <circle cx="155" cy="70" r="3.5" fill="#2C1A0E"/>
+      <circle cx="154" cy="69" r="1.2" fill="#fff"/>
+      <!-- Tusk -->
+      <path d="M152 80 Q145 88 148 94 Q150 97 153 95 Q154 92 152 88 Q151 84 154 82Z" fill="#FFF8DC"/>
+      <!-- Legs -->
+      <rect x="162" y="108" width="10" height="16" rx="5" fill="#E8E4DC"/>
+      <rect x="176" y="110" width="10" height="14" rx="5" fill="#E8E4DC"/>
+      <rect x="191" y="110" width="10" height="14" rx="5" fill="#E8E4DC"/>
+      <rect x="205" y="108" width="10" height="16" rx="5" fill="#E8E4DC"/>
+      <!-- Tail -->
+      <path d="M222 88 Q232 82 228 76 Q226 73 224 76" fill="none" stroke="#D0CCC4" stroke-width="2" stroke-linecap="round"/>
+      <!-- Decorative cloth on elephant -->
+      <path d="M168 78 Q185 72 210 78 Q215 85 210 92 Q185 96 168 90 Z" fill="#8B3A4A" opacity="0.75"/>
+      <path d="M168 78 Q185 72 210 78 Q185 74 168 78Z" fill="#C9921A" opacity="0.8"/>
+      <!-- Gold dots on cloth -->
+      <circle cx="180" cy="84" r="2" fill="#FFD07A" opacity="0.9"/>
+      <circle cx="190" cy="82" r="2" fill="#FFD07A" opacity="0.9"/>
+      <circle cx="200" cy="84" r="2" fill="#FFD07A" opacity="0.9"/>
+      <!-- Headdress -->
+      <path d="M148 62 Q160 54 172 62" fill="none" stroke="#C9921A" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="160" cy="56" r="4" fill="#C9921A"/>
+      <circle cx="160" cy="56" r="2" fill="#FFD07A"/>
+    </svg>
+
+    <div class="header-text">
+      <div class="header-title">Pranay's Divine Diary</div>
+      <div class="header-sub">Saraswati Namastubhyam &middot; 2026 &ndash; 2027</div>
+    </div>
+    <div class="header-bottom">
+      <div style="font-size:11px;color:rgba(255,232,160,0.45);font-style:italic;" id="header-date"></div>
+      <div class="year-switcher">
+        <button class="year-btn active" onclick="setYear(2026)" id="ytab-2026">2026</button>
+        <button class="year-btn" onclick="setYear(2027)" id="ytab-2027">2027</button>
       </div>
     </div>
-    <div class="year-switcher">
-      <button class="year-btn active" onclick="setYear(2026)" id="ytab-2026">2026</button>
-      <button class="year-btn" onclick="setYear(2027)" id="ytab-2027">2027</button>
-    </div>
-  </header>
-
-  <nav>
-    <div class="nav-tab active" onclick="switchTab('calendar')" id="tab-calendar"><span class="tab-icon">📅</span> Diary</div>
-    <div class="nav-tab" onclick="switchTab('home')" id="tab-home"><span class="tab-icon">🏠</span> Home</div>
-    <div class="nav-tab" onclick="switchTab('work')" id="tab-work"><span class="tab-icon">💼</span> Work</div>
-    <div class="nav-tab" onclick="switchTab('notes')" id="tab-notes"><span class="tab-icon">📝</span> Notes</div>
-  </nav>
-
-  <div class="status-bar">
-    <div class="status-dot" id="status-dot"></div>
-    <span id="status-text">Connecting...</span>
-    <span class="settings-link" onclick="openSettings()">&#9881; Settings</span>
   </div>
+</header>
 
-  <div id="content">
-
-    <!-- DIARY TAB -->
-    <div class="panel" id="panel-calendar">
-      <div class="cal-col cal-col-left">
-        <div class="card">
-          <div class="card-head">
-            <div class="cal-nav-row">
-              <button class="cal-nav-btn" onclick="prevMonth()">&#8249;</button>
-              <div class="cal-month-label" id="cal-month-label"></div>
-              <button class="cal-nav-btn" onclick="nextMonth()">&#8250;</button>
-            </div>
-          </div>
-          <div class="card-body" style="padding:10px 11px;">
-            <div class="cal-grid" id="cal-grid"></div>
-            <div class="shloka" style="margin-top:9px;">"Karmanye vadhikaraste, ma phaleshu kadachana"</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="cal-col cal-col-right">
-        <div class="card">
-          <div class="card-head">
-            <div class="card-title" id="entry-date-label">Select a date</div>
-          </div>
-          <div class="card-body">
-            <div class="entry-prompt" id="entry-prompt">Tap any date on the calendar to write your diary entry.</div>
-            <textarea id="entry-textarea" placeholder="Write your thoughts, tasks, or reflections for this day..." style="display:none;"></textarea>
-            <div class="entry-actions" id="entry-actions" style="display:none;">
-              <span class="status-msg" id="saved-msg"></span>
-              <button class="save-btn" onclick="saveEntry()" id="save-btn">Save Entry</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- HOME TASKS -->
-    <div class="panel" id="panel-home">
-      <div class="section-head">
-        <div class="section-dot" style="background:#C2456E;"></div>
-        <div class="section-title">Home To-Do</div>
-        <div class="section-count" id="home-count">0/0 done</div>
-      </div>
-      <div class="add-row">
-        <input type="text" id="home-input" placeholder="Add a home task..." onkeydown="if(event.key==='Enter')addTodo('home')" />
-        <select id="home-pri">
-          <option value="med">Medium</option>
-          <option value="high">High</option>
-          <option value="low">Low</option>
-        </select>
-        <button class="add-btn" onclick="addTodo('home')">+ Add</button>
-      </div>
-      <ul class="todo-list" id="home-list"></ul>
-      <div class="shloka" style="margin-top:10px;">"The home is where dharma begins." &mdash; Tend to it with care.</div>
-    </div>
-
-    <!-- WORK TASKS -->
-    <div class="panel" id="panel-work">
-      <div class="section-head">
-        <div class="section-dot" style="background:#C9921A;"></div>
-        <div class="section-title">Work To-Do</div>
-        <div class="section-count" id="work-count">0/0 done</div>
-      </div>
-      <div class="add-row">
-        <input type="text" id="work-input" placeholder="Add a work task..." onkeydown="if(event.key==='Enter')addTodo('work')" />
-        <select id="work-pri">
-          <option value="med">Medium</option>
-          <option value="high">High</option>
-          <option value="low">Low</option>
-        </select>
-        <button class="add-btn" onclick="addTodo('work')">+ Add</button>
-      </div>
-      <ul class="todo-list" id="work-list"></ul>
-      <div class="shloka" style="margin-top:10px;">"Yoga karmasu kaushalam" &mdash; Excellence in action is yoga. &mdash; Bhagavad Gita</div>
-    </div>
-
-    <!-- NOTES -->
-    <div class="panel" id="panel-notes">
-      <div class="notes-scroll">
-        <div class="notes-grid" id="notes-grid"></div>
-      </div>
-      <div class="new-note-card">
-        <div class="new-note-label">Add a New Note</div>
-        <input type="text" id="note-title-input" placeholder="Note title..." style="margin-bottom:7px;width:100%;" />
-        <textarea id="note-body-input" placeholder="Write anything &mdash; ideas, plans, reflections..." style="min-height:70px;"></textarea>
-        <button class="add-note-btn" onclick="addNote()">+ Save Note</button>
-      </div>
-      <div class="shloka" style="margin-top:9px;">"Svadhyaya" &mdash; Self-study and reflection are a sacred practice.</div>
-    </div>
-
-  </div>
+<!-- GITA QUOTE -->
+<div class="quote-banner" id="quote-banner">
+  <div class="quote-text" id="quote-text"></div>
+  <div class="quote-meaning" id="quote-meaning"></div>
+  <div class="quote-ref" id="quote-ref"></div>
 </div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-tab active" onclick="switchTab('calendar')" id="tab-calendar">
+    <span class="tab-icon">📅</span> Diary
+  </div>
+  <div class="nav-tab" onclick="switchTab('home')" id="tab-home">
+    <span class="tab-icon">🏠</span> Home
+  </div>
+  <div class="nav-tab" onclick="switchTab('work')" id="tab-work">
+    <span class="tab-icon">💼</span> Work
+  </div>
+  <div class="nav-tab" onclick="switchTab('notes')" id="tab-notes">
+    <span class="tab-icon">📝</span> Notes
+  </div>
+</nav>
+
+<!-- STATUS -->
+<div class="status-bar">
+  <div class="status-dot" id="status-dot"></div>
+  <span id="status-text">Connecting...</span>
+  <span class="settings-link" onclick="openSettings()">&#9881; Settings</span>
+</div>
+
+<!-- MAIN -->
+<main>
+
+  <!-- DIARY -->
+  <div class="panel active" id="panel-calendar">
+    <div class="diary-top">
+      <div class="widget-card">
+        <div class="widget-icon" id="weather-icon">🌤️</div>
+        <div>
+          <div class="widget-label">Pakenham, VIC</div>
+          <div class="widget-value" id="weather-temp">--°</div>
+          <div class="widget-sub" id="weather-desc">Loading weather...</div>
+        </div>
+      </div>
+      <div class="widget-card">
+        <div class="widget-icon">📆</div>
+        <div>
+          <div class="widget-label">Today</div>
+          <div class="widget-value" id="today-date" style="font-size:15px;"></div>
+          <div class="widget-sub" id="today-day"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cal-layout">
+      <div class="card">
+        <div class="card-head">
+          <div class="cal-nav-row">
+            <button class="cal-nav-btn" onclick="prevMonth()">&#8249;</button>
+            <div class="cal-month-label" id="cal-month-label"></div>
+            <button class="cal-nav-btn" onclick="nextMonth()">&#8250;</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="cal-grid" id="cal-grid"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title" id="entry-date-label">Select a date to write</div>
+        </div>
+        <div class="card-body">
+          <div class="entry-prompt" id="entry-prompt">&#x1F338; Tap any date on the calendar to open your diary entry.</div>
+          <textarea class="entry-textarea" id="entry-textarea" placeholder="Write your thoughts, tasks, or reflections for this day..."></textarea>
+          <div class="entry-actions" id="entry-actions">
+            <span class="status-msg" id="saved-msg"></span>
+            <button class="save-btn" onclick="saveEntry()" id="save-btn">Save Entry</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="shloka" id="diary-shloka"></div>
+  </div>
+
+  <!-- HOME TASKS -->
+  <div class="panel" id="panel-home">
+    <div class="section-head">
+      <div class="section-dot" style="background:var(--lotus);"></div>
+      <div class="section-title">Home To-Do</div>
+      <div class="section-count" id="home-count">0 / 0 done</div>
+    </div>
+    <div class="add-row">
+      <input class="add-input" type="text" id="home-input" placeholder="Add a home task..." onkeydown="if(event.key==='Enter')addTodo('home')" />
+      <select class="pri-select" id="home-pri">
+        <option value="med">Med</option>
+        <option value="high">High</option>
+        <option value="low">Low</option>
+      </select>
+      <button class="add-btn" onclick="addTodo('home')">+ Add</button>
+    </div>
+    <ul class="todo-list" id="home-list"></ul>
+    <div class="shloka">"The home is where dharma begins." &mdash; Tend to it with love and care.</div>
+  </div>
+
+  <!-- WORK TASKS -->
+  <div class="panel" id="panel-work">
+    <div class="section-head">
+      <div class="section-dot" style="background:var(--gold);"></div>
+      <div class="section-title">Work To-Do</div>
+      <div class="section-count" id="work-count">0 / 0 done</div>
+    </div>
+    <div class="add-row">
+      <input class="add-input" type="text" id="work-input" placeholder="Add a work task..." onkeydown="if(event.key==='Enter')addTodo('work')" />
+      <select class="pri-select" id="work-pri">
+        <option value="med">Med</option>
+        <option value="high">High</option>
+        <option value="low">Low</option>
+      </select>
+      <button class="add-btn" onclick="addTodo('work')">+ Add</button>
+    </div>
+    <ul class="todo-list" id="work-list"></ul>
+    <div class="shloka">"Yoga karmasu kaushalam" &mdash; Excellence in action is yoga. &mdash; Bhagavad Gita 2.50</div>
+  </div>
+
+  <!-- NOTES -->
+  <div class="panel" id="panel-notes">
+    <div class="notes-grid" id="notes-grid"></div>
+    <div class="new-note-card">
+      <div class="new-note-label">Add a New Note</div>
+      <input class="note-input" type="text" id="note-title-input" placeholder="Note title..." />
+      <textarea class="note-textarea" id="note-body-input" placeholder="Write anything — ideas, plans, reflections..."></textarea>
+      <button class="add-note-btn" onclick="addNote()">+ Save Note</button>
+    </div>
+    <div class="shloka">"Svadhyaya" &mdash; Self-study and reflection are a sacred practice.</div>
+  </div>
+
+</main>
 
 <script>
-const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
-const DOWS=['Su','Mo','Tu','We','Th','Fr','Sa'];
-const PRI_LABELS={high:'High',med:'Medium',low:'Low'};
-const PRI_CLS={high:'pri-high',med:'pri-med',low:'pri-low'};
-let cfg={scriptUrl:''};
-let S={year:2026,month:new Date().getMonth(),selectedDate:null,entries:{},homeTodos:[],workTodos:[],notes:[]};
+// ── GITA QUOTES ──
+const QUOTES = [
+  { text: "Karmanye vadhikaraste, ma phaleshu kadachana.", meaning: "You have a right to perform your prescribed duties, but not to the fruits of your actions.", ref: "Bhagavad Gita 2.47" },
+  { text: "Yoga karmasu kaushalam.", meaning: "Excellence, or perfection, in work is what constitutes yoga.", ref: "Bhagavad Gita 2.50" },
+  { text: "The soul is neither born, nor does it die at any time.", meaning: "The eternal self is beyond birth and death — it simply is.", ref: "Bhagavad Gita 2.20" },
+  { text: "Man is made by his belief. As he believes, so he is.", meaning: "Your thoughts and faith shape your very reality and existence.", ref: "Bhagavad Gita 17.3" },
+  { text: "Set thy heart upon thy work, but never on its reward.", meaning: "Act with full effort and devotion, without attachment to results.", ref: "Bhagavad Gita 2.47" },
+  { text: "In the well-being of all beings lies your own well-being.", meaning: "True prosperity flows from compassion and service to all.", ref: "Bhagavad Gita 5.25" },
+  { text: "Let a man lift himself by himself; let him not degrade himself.", meaning: "You are your own greatest friend, and your own greatest enemy.", ref: "Bhagavad Gita 6.5" },
+  { text: "Change is the law of the universe. You can be a millionaire or a pauper in an instant.", meaning: "Nothing is permanent — embrace change as the nature of existence.", ref: "Bhagavad Gita 2.14" },
+  { text: "Fear not what is not real. Never was, and never will be.", meaning: "Only the eternal is real — release fear of the impermanent.", ref: "Bhagavad Gita 2.16" },
+  { text: "When a person responds to the joys and sorrows of others as if they were his own, he has attained the highest state.", meaning: "Empathy and oneness with others is the mark of spiritual mastery.", ref: "Bhagavad Gita 6.32" },
+  { text: "The mind acts like an enemy for those who do not control it.", meaning: "A disciplined mind is your greatest ally; an undisciplined one, your worst foe.", ref: "Bhagavad Gita 6.6" },
+  { text: "Among all remedies, sleep is the supreme healer.", meaning: "Rest and stillness restore the body and the spirit alike.", ref: "Bhagavad Gita 6.17" },
+];
+
+function loadQuote() {
+  const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+  document.getElementById('quote-text').textContent = `"${q.text}"`;
+  document.getElementById('quote-meaning').textContent = q.meaning;
+  document.getElementById('quote-ref').textContent = q.ref;
+}
+
+// ── DATE ──
+function setDateWidgets() {
+  const now = new Date();
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('today-date').textContent = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+  document.getElementById('today-day').textContent = days[now.getDay()];
+  document.getElementById('header-date').textContent = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]}`;
+}
+
+// ── WEATHER (Open-Meteo, free, no key needed) ──
+async function loadWeather() {
+  try {
+    const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=-38.0833&longitude=145.4833&current_weather=true&hourly=relativehumidity_2m&timezone=Australia%2FSydney');
+    const data = await res.json();
+    const w = data.current_weather;
+    const code = w.weathercode;
+    const temp = Math.round(w.temperature);
+    const icons = { 0:'☀️', 1:'🌤️', 2:'⛅', 3:'☁️', 45:'🌫️', 48:'🌫️', 51:'🌦️', 53:'🌦️', 55:'🌧️', 61:'🌧️', 63:'🌧️', 65:'🌧️', 71:'❄️', 73:'❄️', 75:'❄️', 80:'🌦️', 81:'🌧️', 82:'⛈️', 95:'⛈️' };
+    const descs = { 0:'Clear sky', 1:'Mainly clear', 2:'Partly cloudy', 3:'Overcast', 45:'Foggy', 48:'Foggy', 51:'Light drizzle', 53:'Drizzle', 55:'Heavy drizzle', 61:'Light rain', 63:'Moderate rain', 65:'Heavy rain', 71:'Light snow', 73:'Moderate snow', 75:'Heavy snow', 80:'Rain showers', 81:'Rain showers', 82:'Heavy showers', 95:'Thunderstorm' };
+    document.getElementById('weather-icon').textContent = icons[code] || '🌡️';
+    document.getElementById('weather-temp').textContent = `${temp}°C`;
+    document.getElementById('weather-desc').textContent = descs[code] || 'Current weather';
+  } catch(e) {
+    document.getElementById('weather-temp').textContent = '--°C';
+    document.getElementById('weather-desc').textContent = 'Weather unavailable';
+  }
+}
+
+// ── CONFIG & API ──
+const MONTHS_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DOWS = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+const PRI_LABELS = {high:'High',med:'Medium',low:'Low'};
+const PRI_CLS = {high:'pri-high',med:'pri-med',low:'pri-low'};
+
+let cfg = {scriptUrl:''};
+let S = {year:2026,month:new Date().getMonth(),selectedDate:null,entries:{},homeTodos:[],workTodos:[],notes:[]};
 
 function loadConfig(){try{const s=localStorage.getItem('diary_cfg');if(s)cfg=JSON.parse(s);}catch(e){}}
 function saveConfig(){
@@ -428,16 +709,25 @@ async function loadData(){
   const result=await apiGet('getData');
   if(!result||result.error){setStatus('error','Could not connect. Check Settings.');loadLocal();return;}
   S.entries=result.entries||{};S.homeTodos=result.homeTodos||[];S.workTodos=result.workTodos||[];S.notes=result.notes||[];
-  setStatus('ok','Connected · Google Sheets synced');renderAll();
+  setStatus('ok','Connected \u00b7 Google Sheets synced');renderAll();
 }
 function loadLocal(){try{const d=JSON.parse(localStorage.getItem('diary_data')||'{}');S.entries=d.entries||{};S.homeTodos=d.homeTodos||[];S.workTodos=d.workTodos||[];S.notes=d.notes||[];}catch(e){}renderAll();}
 function saveLocal(){localStorage.setItem('diary_data',JSON.stringify({entries:S.entries,homeTodos:S.homeTodos,workTodos:S.workTodos,notes:S.notes}));}
+
+// ── YEAR / TAB ──
 function setYear(y){S.year=y;document.querySelectorAll('.year-btn').forEach(t=>t.classList.remove('active'));document.getElementById('ytab-'+y).classList.add('active');renderCalendar();}
-function switchTab(name){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById('panel-'+name).classList.add('active');document.getElementById('tab-'+name).classList.add('active');}
+function switchTab(name){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+}
+
+// ── CALENDAR ──
 function dk(y,m,d){return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;}
 function renderCalendar(){
   const{year,month}=S;
-  document.getElementById('cal-month-label').textContent=`${MONTHS[month]} ${year}`;
+  document.getElementById('cal-month-label').textContent=`${MONTHS_FULL[month]} ${year}`;
   const grid=document.getElementById('cal-grid');
   grid.innerHTML=DOWS.map(d=>`<div class="dow">${d}</div>`).join('');
   const first=new Date(year,month,1).getDay(),days=new Date(year,month+1,0).getDate(),prev=new Date(year,month,0).getDate();
@@ -463,6 +753,14 @@ function selectDate(k){
   const msg=document.getElementById('saved-msg');msg.textContent='';msg.className='status-msg';
   renderCalendar();
 }
+function prevMonth(){
+  if(S.month===0){if(S.year===2026)return;S.year--;S.month=11;document.querySelectorAll('.year-btn').forEach(t=>t.classList.remove('active'));document.getElementById('ytab-'+S.year).classList.add('active');}
+  else S.month--;renderCalendar();
+}
+function nextMonth(){
+  if(S.month===11){if(S.year===2027)return;S.year++;S.month=0;document.querySelectorAll('.year-btn').forEach(t=>t.classList.remove('active'));document.getElementById('ytab-'+S.year).classList.add('active');}
+  else S.month++;renderCalendar();
+}
 async function saveEntry(){
   if(!S.selectedDate)return;
   const btn=document.getElementById('save-btn'),msg=document.getElementById('saved-msg');
@@ -472,18 +770,12 @@ async function saveEntry(){
   saveLocal();
   const result=await apiPost('saveEntry',{date:S.selectedDate,text:val});
   btn.disabled=false;btn.textContent='Save Entry';
-  msg.textContent=result&&result.ok?'✓ Saved to Google Sheets':'✓ Saved locally';
+  msg.textContent=result&&result.ok?'\u2713 Saved to Google Sheets':'\u2713 Saved locally';
   msg.className='status-msg show';setTimeout(()=>msg.classList.remove('show'),3000);
   renderCalendar();
 }
-function prevMonth(){
-  if(S.month===0){if(S.year===2026)return;S.year--;S.month=11;document.querySelectorAll('.year-btn').forEach(t=>t.classList.remove('active'));document.getElementById('ytab-'+S.year).classList.add('active');}
-  else S.month--;renderCalendar();
-}
-function nextMonth(){
-  if(S.month===11){if(S.year===2027)return;S.year++;S.month=0;document.querySelectorAll('.year-btn').forEach(t=>t.classList.remove('active'));document.getElementById('ytab-'+S.year).classList.add('active');}
-  else S.month++;renderCalendar();
-}
+
+// ── TODOS ──
 async function addTodo(type){
   const inp=document.getElementById(type+'-input'),pri=document.getElementById(type+'-pri').value,text=inp.value.trim();
   if(!text)return;const item={id:Date.now().toString(),text,done:false,pri};
@@ -503,8 +795,8 @@ async function deleteTodo(type,id){
 }
 function renderTodos(type){
   const arr=type==='home'?S.homeTodos:S.workTodos,list=document.getElementById(type+'-list'),count=document.getElementById(type+'-count');
-  count.textContent=`${arr.filter(i=>i.done).length}/${arr.length} done`;
-  if(!arr.length){list.innerHTML='<div class="empty-state">No tasks yet. Add one above.</div>';return;}
+  count.textContent=`${arr.filter(i=>i.done).length} / ${arr.length} done`;
+  if(!arr.length){list.innerHTML='<div class="empty-state">No tasks yet. Add one above &#8593;</div>';return;}
   list.innerHTML=arr.map(item=>`
     <li class="todo-item">
       <div class="check-box${item.done?' done':''}" onclick="toggleTodo('${type}','${item.id}')">${item.done?'&#10003;':''}</div>
@@ -513,6 +805,8 @@ function renderTodos(type){
       <button class="del-btn" onclick="deleteTodo('${type}','${item.id}')">&#10005;</button>
     </li>`).join('');
 }
+
+// ── NOTES ──
 async function addNote(){
   const title=document.getElementById('note-title-input').value.trim(),body=document.getElementById('note-body-input').value.trim();
   if(!title&&!body)return;
@@ -525,7 +819,7 @@ async function deleteNote(id){
 }
 function renderNotes(){
   const grid=document.getElementById('notes-grid');
-  if(!S.notes.length){grid.innerHTML='<div class="empty-state" style="grid-column:1/-1">No notes yet.</div>';return;}
+  if(!S.notes.length){grid.innerHTML='<div class="empty-state" style="grid-column:1/-1">No notes yet. Add one below &#8595;</div>';return;}
   grid.innerHTML=S.notes.map(n=>`
     <div class="note-card">
       <button class="note-del" onclick="deleteNote('${n.id}')">&#10005;</button>
@@ -535,12 +829,16 @@ function renderNotes(){
 }
 function renderAll(){renderCalendar();renderTodos('home');renderTodos('work');renderNotes();}
 
+// ── INIT ──
 loadConfig();
+loadQuote();
+setDateWidgets();
+loadWeather();
 const now=new Date();
 if(now.getFullYear()>=2026&&now.getFullYear()<=2027){S.year=now.getFullYear();S.month=now.getMonth();}
 if(!cfg.scriptUrl){
   document.getElementById('setup-modal').style.display='flex';
-  setStatus('error','Not connected — click Settings to add your Script URL.');
+  setStatus('error','Not connected \u2014 click Settings to add your Script URL.');
   loadLocal();renderAll();
 }else{
   document.getElementById('setup-modal').style.display='none';loadData();
